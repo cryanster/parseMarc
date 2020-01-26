@@ -55,10 +55,12 @@ function parseMarc(inputMarc, arr) {
 // A method to get only the required fields
     returnMarc.getFields = function(array,pretty){
         var output = {};
-        // Need to add support here for retrieving subfields
         for (var i=0 ; i<array.length ; i++){
             var tag = array[i];
-            if (!returnMarc[tag]) { 
+            var delimiter = /([0-9]{3})\|(.)/.exec(tag);
+            if (delimiter) {
+                output[tag] = returnMarc[delimiter[1]].subfields[delimiter[2]];
+            } else if (!returnMarc[tag]) { 
                 output[tag] = "--";
             } else if (pretty) {
                 output[tag] = returnMarc[tag].field.replace(/\|./g," ")  // Remove subfield delimiters
